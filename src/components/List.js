@@ -5,14 +5,20 @@ import Dropdown from './Dropdown';
 import Result from './Result';
 
 
+const CREATION_NEWEST = 'CREATION_NEWEST';
+const CREATION_OLDEST = 'CREATION_OLDEST';
+const INTERACTION_LATEST = 'INTERACTION_LATEST';  
+
 const List = ({isUpdated}) => {
 
     const [passwordList, setPasswordList] = useState(null);
-    const [currentSort, setCurrentSort] = useState('creationNewest');
+    const [currentSort, setCurrentSort] = useState(CREATION_OLDEST);
+    const [isOpen, setIsOpen] = useState(false);
     useEffect(() => {
         const getPasswordList = async () => {
             const { data } = await passwords.get('/passwords');
-            orderByDate(currentSort, data);
+            //orderByDate(currentSort, data);
+            setPasswordList(data);
         }
         getPasswordList();
     }, [isUpdated]);
@@ -28,25 +34,21 @@ const List = ({isUpdated}) => {
         // }
 
         
-    const orderByDate = (id, pwsToSort) => {
+    const orderByDate = (eleCLicked, pwsToSort) => {
+        console.log(eleCLicked)
+        const id = eleCLicked.id ? eleCLicked.id : eleCLicked.parentElement.id;
         let sortedPassword = [...pwsToSort];
         sortedPassword.sort( (item1, item2) => {
             switch(id) {
-                case 'creationNewest':
-                    // return item2.date - item1.date;
+                case CREATION_NEWEST:
                     return new Date(item2.date) - new Date(item1.date);
-                case 'creationOldest':
-                    //console.log(new Date(item1.date) - new Date(item2.date));
+                case {CREATION_OLDEST}:
                     return new Date(item1.date) - new Date(item2.date);
-                case 'interactionLatest':
-                    console.log('sorting by latest int')
+                case {INTERACTION_LATEST}:
                     return new Date(item2.lastInteracted) - new Date(item1.lastInteracted);
-                // case 'mostRecentlyViewed':
-                //     return 'mostrecent'
 
                 }
             });  
-        //console.log(sortedPassword);
         setPasswordList(sortedPassword);
         setCurrentSort(id);
     }
@@ -54,7 +56,6 @@ const List = ({isUpdated}) => {
     const renderedPasswordList =  passwordList
     ? passwordList.map((item, index) => {
         return(
-            //this clas name has to be modified later as I come up with a better styling for this
             <Result 
                 key={index}
                 content={item.title}
@@ -96,22 +97,33 @@ const List = ({isUpdated}) => {
             <h2 className="header">
                 password list
             </h2>
-            <div 
-                onClick={(e) => {
-                //console.log(e.target);
-                orderByDate(e.target.id, passwordList)}
+            <div className="result-container">
+            <h3 onClick={() => setIsOpen(!isOpen)} >
+                Sort By :{currentSort.toLocaleLowerCase().replace('_', ' ')}
+                { !isOpen && <i className="arrow down icon"></i> } 
+            </h3> 
+            {isOpen && 
+                <div 
+                    onClick={(e) => {
+                    //console.log(e.target);
+                    orderByDate(e.target, passwordList)}
                 }>
-                <button className="small button" id="creationNewest">
-                    <i className="sort numeric down icon"></i>
-                </button>
-                <button className="small button" id="interactionLatest">
-                    <i className="sort numeric down icon"></i>
-                    <i className="plus icon"></i>
-                </button>
-                <button className="small button" id="creationOldest">
-                    <i className="sort numeric up icon"></i>
-                </button>
+                    <button className="small button" id={CREATION_NEWEST}>
+                        <i className="sort numeric down icon"></i>
+                        creation date
+                    </button>
+                    <button className="small button" id={INTERACTION_LATEST}>
+                        <i className="sort numeric down icon"></i>
+                        date interacted
+                    </button>
+                    <button className="small button" id={CREATION_OLDEST}>
+                        <i className="sort numeric up icon"></i>
+                        creation date
+                    </button>
+                </div>
+            }
             </div>
+
             <div className="list-wrapper" >
                 {renderedPasswordList}
             </div>

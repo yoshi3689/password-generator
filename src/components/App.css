@@ -11,6 +11,10 @@ a, a:hover {
     color: black;
 }
 
+i {
+    cursor: pointer;
+}
+
 /* always present on the UI*/
 
 body {
@@ -189,19 +193,31 @@ input[type=number]:hover, input[type=number]:focus  {
 .header {
     text-align: center;
 }
+
 .result-container {
     width: 100%;
     padding: 0.5rem;
-    border-bottom: gray solid 1px;
     border-radius: 1rem;
-    /* margin-bottom: 0.3rem; */
+    
     background-color:#21379c;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.result-container:hover {
+.container > .result-container {
+
+
+    margin-bottom: 1rem;
+}
+
+.result-wrapper > .result-container {
+    
+    border-bottom: gray solid 1px;
+    border-radius: 1rem;
+}
+
+.result-wrapper > .result-container:hover {
     transform: translateY(-3px);
 }
 

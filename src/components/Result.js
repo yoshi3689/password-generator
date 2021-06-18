@@ -19,9 +19,9 @@ const Result = ({ content, onBtnClick1, onBtnClick2, iClass1, iClass2, isNew, id
     }
 
     const onItemClick = async () => {
-        const currentDate = new Date();
-        const { data } = await passwords.patch(`/passwords/${id}`, {lastClicked: currentDate, lastInteracted:currentDate });
-        console.log(data);
+        //const currentTime = new Date();
+        const { data } = await passwords.patch(`/passwords/${id}`, {lastClicked: new Date(), lastInteracted:new Date() });
+        console.log(new Date(data.lastInteracted).getTime());
     }
 
     const onHover = (e) => {

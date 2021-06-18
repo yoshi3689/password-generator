@@ -47,16 +47,16 @@ const Generator = ({header, password, setPassword}) => {
     return(
         <div className="container" >
             <h2 className="header"> {header} </h2> 
-            <Result
+            {/* <Result
                 content={password}
                 onBtnClick1={shuffle}
                 onBtnClick2={copy}
                 iClass1='shuffle'
                 iClass2='clipboard'
                 >
-            </Result>
+            </Result> */}
 
-            {/* <div className="result-container">
+            <div className="result-container">
                 <h4 className="result">
                     {password}
                 </h4>
@@ -73,7 +73,7 @@ const Generator = ({header, password, setPassword}) => {
                         <i className="random icon" />
                     </button>
                 </span>
-            </div> */}
+            </div>
 
             <form onSubmit={(e) => generate(e)}>
                 <Input 
