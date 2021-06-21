@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { passwords } from '../API/server';
 import { COPY } from '../constants';
 
-const Result = ({ content, onBtnClick1, onBtnClick2, iClass1, iClass2, isNew, id, dropdown }) => {
+const Result = ({ content, onBtnClick1, onBtnClick2, iClass1, iClass2, isNew, id, setJustUpdated, dropdown }) => {
 
     // useEffect(() => {
         
@@ -13,15 +13,20 @@ const Result = ({ content, onBtnClick1, onBtnClick2, iClass1, iClass2, isNew, id
     const [isOpen, setIsOpen] = useState(false);
 
     const onNewHover = async () => {
-        const { data } = await passwords.patch(`/passwords/${id}`, {isNew: false});
-        console.log(data);
+        //const { data } = 
+        await passwords.patch(`/passwords/${id}`, {isNew: false});
+        //console.log(data);
         setIsViewed(true);
     }
 
     const onItemClick = async () => {
-        //const currentTime = new Date();
-        const { data } = await passwords.patch(`/passwords/${id}`, {lastClicked: new Date(), lastInteracted:new Date() });
-        console.log(new Date(data.lastInteracted).getTime());
+        // let currentTime = new Date();
+        const { data } = await passwords.patch(`/passwords/${id}`, { lastClicked: new Date(), lastInteracted: new Date() });
+        if(data) {
+            //console.log('it is coming')
+            setJustUpdated(data);
+        }
+        //console.log(new Date(data.lastInteracted).getTime(), data.id);
     }
 
     const onHover = (e) => {

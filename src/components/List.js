@@ -9,10 +9,10 @@ const CREATION_NEWEST = 'CREATION_NEWEST';
 const CREATION_OLDEST = 'CREATION_OLDEST';
 const INTERACTION_LATEST = 'INTERACTION_LATEST';  
 
-const List = ({isUpdated}) => {
+const List = ({justUpdated, setJustUpdated}) => {
 
     const [passwordList, setPasswordList] = useState(null);
-    const [currentSort, setCurrentSort] = useState(CREATION_OLDEST);
+    const [currentSort, setCurrentSort] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     useEffect(() => {
         const getPasswordList = async () => {
@@ -20,8 +20,9 @@ const List = ({isUpdated}) => {
             //orderByDate(currentSort, data);
             setPasswordList(data);
         }
+        console.log('this should be fired when it is first rendered, and justUpdated has changed')
         getPasswordList();
-    }, [isUpdated]);
+    }, [justUpdated]);
         // const getPasswordList = async () => {
         //     const {data} = await passwords.get('/passwords');
         //     data.map(item => {
@@ -35,22 +36,25 @@ const List = ({isUpdated}) => {
 
         
     const orderByDate = (eleCLicked, pwsToSort) => {
-        console.log(eleCLicked)
         const id = eleCLicked.id ? eleCLicked.id : eleCLicked.parentElement.id;
         let sortedPassword = [...pwsToSort];
         sortedPassword.sort( (item1, item2) => {
             switch(id) {
                 case CREATION_NEWEST:
+                    console.log(id)
                     return new Date(item2.date) - new Date(item1.date);
-                case {CREATION_OLDEST}:
+                case CREATION_OLDEST:
+                    console.log(id)
                     return new Date(item1.date) - new Date(item2.date);
-                case {INTERACTION_LATEST}:
+                case INTERACTION_LATEST:
+                    console.log(id)
                     return new Date(item2.lastInteracted) - new Date(item1.lastInteracted);
 
                 }
             });  
         setPasswordList(sortedPassword);
         setCurrentSort(id);
+        setIsOpen(false);
     }
         
     const renderedPasswordList =  passwordList
@@ -65,6 +69,7 @@ const List = ({isUpdated}) => {
                 iClass2='edit'
                 isNew={item.isNew}
                 id={item.id}
+                setJustUpdated={setJustUpdated}
                 dropdown={
                 <Dropdown 
                     listProps={{
@@ -93,13 +98,13 @@ const List = ({isUpdated}) => {
     // }
 
     return (
-        <div className="container">
+        <div className="container list">
             <h2 className="header">
                 password list
             </h2>
             <div className="result-container">
             <h3 onClick={() => setIsOpen(!isOpen)} >
-                Sort By :{currentSort.toLocaleLowerCase().replace('_', ' ')}
+                Sort By : {currentSort.toLocaleLowerCase().replace('_', ' ')}
                 { !isOpen && <i className="arrow down icon"></i> } 
             </h3> 
             {isOpen && 

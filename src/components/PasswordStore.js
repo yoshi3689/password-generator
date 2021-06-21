@@ -5,7 +5,7 @@ import { DatePicker } from './DatePicker';
 import Input from './Input';
 
 
-const PasswordStore = ({ password, setPassword ,setIsUpdated }) => {
+const PasswordStore = ({ password, setPassword ,setJustUpdated }) => {
 
     const [date, setDate] = useState(new Date());
     const [title, setTitle] = useState("");
@@ -27,7 +27,7 @@ const PasswordStore = ({ password, setPassword ,setIsUpdated }) => {
                 lastInteracted: date
             }
             const {data} = await passwords.post('/passwords', {password, date, title, author, ...newPasswordConfig});
-            setIsUpdated(data);
+            setJustUpdated(data);
             console.log(data);
             alert(data.password + " was saved");
             history.push('/passwordList');

@@ -4,7 +4,7 @@ import { passwords } from '../API/server';
 import Dropdown from './Dropdown';
 import Modal from './Modal';
 
-const PasswordDelete = ({ match, setIsUpdated }) => {
+const PasswordDelete = ({ match, setJustUpdated }) => {
     const [passwordToDelete, setPasswordToDelete] = useState(null);
     // const [showModal, setShowModal] = useState(null);
     useEffect(() => {
@@ -27,7 +27,7 @@ const PasswordDelete = ({ match, setIsUpdated }) => {
     const deletePassword = async() => {
         const { id } = passwordToDelete;
         await passwords.delete(`/passwords/${id}`);
-        setIsUpdated(id);
+        setJustUpdated(id);
         alert("successfully deleted");
         history.push('/passwordList');
     }

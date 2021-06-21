@@ -205,9 +205,20 @@ input[type=number]:hover, input[type=number]:focus  {
     align-items: center;
 }
 
+.list > .result-container {
+    /* flex-direction: column; */
+    display: block;
+
+}
+
+.list > .result-container > h3 {
+    width: fit-content;
+}
+.list > .result-container button {
+    margin-bottom: 0.3rem;
+}
+
 .container > .result-container {
-
-
     margin-bottom: 1rem;
 }
 
@@ -219,6 +230,7 @@ input[type=number]:hover, input[type=number]:focus  {
 
 .result-wrapper > .result-container:hover {
     transform: translateY(-3px);
+    box-shadow: 0 0 5px 0.3rem rgba(0, 0, 0, 0.336);
 }
 
 .result {

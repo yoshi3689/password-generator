@@ -15,7 +15,7 @@ import Menu from './Menu';
 const App = () => {
 
     const [password, setPassword] = useState("");
-    const [isUpdated, setIsUpdated] = useState(null);
+    const [justUpdated, setJustUpdated] = useState(null);
 
     return(
         <div className="wrapper">
@@ -32,23 +32,26 @@ const App = () => {
                     />
                 </Route>
               
-                <Route exact path="/passwordList">
-                    <List 
-                    header="List"
-                    isUpdated={isUpdated} />   
-                </Route>
+                <Route exact path="/passwordList"
+                    render={
+                    props => <List 
+                    {...props} 
+                    justUpdated={justUpdated}
+                    setJustUpdated={setJustUpdated} 
+                    password={password} />}   
+                />
 
                 <Route exact path="/passwordList/store" render={
-                    props => <PasswordStore {...props} setIsUpdated={setIsUpdated} password={password} /> 
+                    props => <PasswordStore {...props} setJustUpdated={setJustUpdated} password={password} /> 
                 } />
 
                 <Route exact path="/passwordList/edit/:id" render={props => 
                     <PasswordEdit 
                         {...props}
-                        setIsUpdated={setIsUpdated}/> 
+                        setJustUpdated={setJustUpdated}/> 
                     } />
 
-                <Route exact path="/passwordList/delete/:id" render={props => <PasswordDelete {...props} setIsUpdated={setIsUpdated}/>
+                <Route exact path="/passwordList/delete/:id" render={props => <PasswordDelete {...props} setJustUpdated={setJustUpdated}/>
                  } />
             
             </BrowserRouter>

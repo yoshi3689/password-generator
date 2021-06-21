@@ -7,7 +7,7 @@ import Input from './Input';
 
 
 
-const PasswordEdit = ({ match, setIsUpdated}) => {
+const PasswordEdit = ({ match, setJustUpdated}) => {
     const [passwordToEdit, setPasswordToEdit] = useState({});
     const [password, setPassword] = useState("");
     const [lastModified, setLastModified] = useState(new Date());
@@ -39,8 +39,7 @@ const PasswordEdit = ({ match, setIsUpdated}) => {
                 lastInteracted: lastModified,
                 lastModified, password, title, author,
             });
-            console.log(data);
-            setIsUpdated(true);
+            setJustUpdated(data);
             alert("the password is changed to " + data.password);
             history.push("/passwordList");
         } else {
