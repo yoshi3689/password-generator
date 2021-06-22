@@ -4,6 +4,11 @@ export const DEFAULT_NUMBER = 10;
 export const MIN_NUMBER = 7;
 export const MAX_NUMBER = 15;
 
+
+export const NEW_PASSWORD = 'NEW_PASSWORD';
+export const MODIFIED_PASSWORD = 'MODIFIED_PASSWORD';
+export const PASSWORD_STORED = 'PASSWORD_STORED';
+
 export const GENERATE = ( passwordLength, upper, lower, number, symbol) => {
     let validTypeCount = upper + lower + number + symbol;
 

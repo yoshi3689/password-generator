@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux';
 
 import { passwords } from '../API/server';
 import Dropdown from './Dropdown';
@@ -10,7 +11,9 @@ const CREATION_OLDEST = 'CREATION_OLDEST';
 const INTERACTION_LATEST = 'INTERACTION_LATEST';  
 
 const List = ({justUpdated, setJustUpdated}) => {
-
+    const modifiedPassword = useSelector(state => state.modifiedPassword);
+    console.log(modifiedPassword);
+    
     const [passwordList, setPasswordList] = useState(null);
     const [currentSort, setCurrentSort] = useState('');
     const [isOpen, setIsOpen] = useState(false);

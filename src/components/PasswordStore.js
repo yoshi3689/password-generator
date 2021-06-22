@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setPasswordStored } from '../actions';
 import { passwords } from '../API/server';
 import { DatePicker } from './DatePicker';
 import Input from './Input';
 
 
 const PasswordStore = ({ password, setPassword ,setJustUpdated }) => {
-
+    
     const [date, setDate] = useState(new Date());
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
 
-    // useEffect(() => {
-    //     setDate(new Date());
-    // })
-
+    const dispatch = useDispatch();
     const history = useHistory();
     
     const storePassword = async e => {
@@ -28,6 +27,8 @@ const PasswordStore = ({ password, setPassword ,setJustUpdated }) => {
             }
             const {data} = await passwords.post('/passwords', {password, date, title, author, ...newPasswordConfig});
             setJustUpdated(data);
+            
+            dispatch(setPasswordStored(data));
             console.log(data);
             alert(data.password + " was saved");
             history.push('/passwordList');

@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
 import { passwords } from '../API/server';
 import { COPY } from '../constants';
+import { setModifiedPassword } from '../actions';
 
 const Result = ({ content, onBtnClick1, onBtnClick2, iClass1, iClass2, isNew, id, setJustUpdated, dropdown }) => {
 
-    // useEffect(() => {
-        
-    // })
+    const dispatch = useDispatch();
     const [showDropdown, setShowDropdown] = useState(false); 
     const [isViewed, setIsViewed] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
     const onNewHover = async () => {
-        //const { data } = 
         await passwords.patch(`/passwords/${id}`, {isNew: false});
-        //console.log(data);
         setIsViewed(true);
     }
 
@@ -25,6 +24,7 @@ const Result = ({ content, onBtnClick1, onBtnClick2, iClass1, iClass2, isNew, id
         if(data) {
             //console.log('it is coming')
             setJustUpdated(data);
+            dispatch(setModifiedPassword(data));
         }
         //console.log(new Date(data.lastInteracted).getTime(), data.id);
     }
