@@ -1,14 +1,15 @@
 import React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
-//import Settings from './Settings';
-// import {INPUT_NUMBER, INPUT_CHECKBOX, MAX_NUMBER, MIN_NUMBER} from '../constants';
 import Input from './Input';
-import Result from './Result';
-import { GENERATE, INPUT_NUMBER, INPUT_CHECKBOX, MAX_NUMBER, MIN_NUMBER, SHUFFLE, COPY } from '../constants';
+import { GENERATE, INPUT_NUMBER, INPUT_CHECKBOX, MAX_NUMBER, MIN_NUMBER, SHUFFLE, COPY, SET_PW } from '../constants';
 
-const Generator = ({header, password, setPassword}) => {
+const Generator = ({header}) => {
+    const dispatch = useDispatch();
+    const newPassword = useSelector(state=> state.newPassword);
+    console.log(newPassword);
 
     const [passwordLength, setPasswordLength] = useState(10);
     const [includeUpper, setIncludeUpper] = useState(true);
@@ -23,17 +24,16 @@ const Generator = ({header, password, setPassword}) => {
             passwordLength, includeUpper, includeLower, includeNumber, includeSymbol
             );
         if(newPassword) {
-            setPassword(newPassword);
+            dispatch({ type: SET_PW, payload: newPassword });
         } else {
             alert('could not create a new password');
         }
     };
 
     const shuffle = () => {
-        const shuffledPassword = SHUFFLE(password);
-        //console.log(shuffledPassword);
+        const shuffledPassword = SHUFFLE(newPassword);
         if(shuffledPassword) {
-            setPassword(shuffledPassword);
+            dispatch({ type: SET_PW, payload: shuffledPassword });
         }
         else {
             alert('create a password first!');
@@ -41,24 +41,17 @@ const Generator = ({header, password, setPassword}) => {
     }
 
     const copy = () => {
-        COPY(password);
+        COPY(newPassword);
     }
 
     return(
         <div className="container" >
-            <h2 className="header"> {header} </h2> 
-            {/* <Result
-                content={password}
-                onBtnClick1={shuffle}
-                onBtnClick2={copy}
-                iClass1='shuffle'
-                iClass2='clipboard'
-                >
-            </Result> */}
-
+            <h2 className="header"> 
+                {header} 
+            </h2> 
             <div className="result-container">
                 <h4 className="result">
-                    {password}
+                    {newPassword}
                 </h4>
                 <span className="small-button-wrapper">
                     <button 
@@ -99,7 +92,7 @@ const Generator = ({header, password, setPassword}) => {
                     Generate
                 </button>
 
-                {password && 
+                {newPassword && 
                 <Link to="/passwordList/store" className="proceed large button" >
                     Store
                 </Link>

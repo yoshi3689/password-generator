@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
 import { passwords } from '../API/server';
 import { DatePicker } from './DatePicker';
-
+import { SET_MODIFIED_PASSWORD, EDIT_PW } from '../constants';
 import Input from './Input';
 
 
 
-const PasswordEdit = ({ match, setJustUpdated}) => {
+const PasswordEdit = ({ match }) => {
     const [passwordToEdit, setPasswordToEdit] = useState({});
     const [password, setPassword] = useState("");
     const [lastModified, setLastModified] = useState(new Date());
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
 
+    const dispatch = useDispatch();
     const history = useHistory();
 
     useEffect(() => {
-        
         const getPassword = async () => {
             const { data } = await passwords.get(`/passwords/${match.params.id}`);
             setPasswordToEdit(data);
@@ -28,7 +30,7 @@ const PasswordEdit = ({ match, setJustUpdated}) => {
             setAuthor(data.author);
         }
         getPassword();
-    }, []);
+    }, [match.params.id]);
      const editPassword = async (e) => {
         e.preventDefault();
         if(passwordToEdit.password !== password) {
@@ -39,7 +41,8 @@ const PasswordEdit = ({ match, setJustUpdated}) => {
                 lastInteracted: lastModified,
                 lastModified, password, title, author,
             });
-            setJustUpdated(data);
+            dispatch({ type: EDIT_PW, payload: data});
+            dispatch({ type: SET_MODIFIED_PASSWORD, payload: {...data, type: EDIT_PW}});
             alert("the password is changed to " + data.password);
             history.push("/passwordList");
         } else {

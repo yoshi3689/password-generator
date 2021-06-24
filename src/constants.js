@@ -6,8 +6,16 @@ export const MAX_NUMBER = 15;
 
 
 export const NEW_PASSWORD = 'NEW_PASSWORD';
-export const MODIFIED_PASSWORD = 'MODIFIED_PASSWORD';
+export const SET_MODIFIED_PASSWORD = 'MODIFIED_PASSWORD';
 export const PASSWORD_STORED = 'PASSWORD_STORED';
+
+export const FETCH_PL = 'FETCH_PL';
+export const FETCH_PW = 'FETCH_PW';
+export const DELETE_PW = 'DELETE_PW';
+export const STORE_PW = 'STORE_PW';
+export const EDIT_PW = 'EDIT_PW';
+export const SET_PL = 'SET_PL';
+export const SET_PW = 'SET_PW';
 
 export const GENERATE = ( passwordLength, upper, lower, number, symbol) => {
     let validTypeCount = upper + lower + number + symbol;

@@ -32,6 +32,8 @@ const Input = (props) => {
                         onChange={(e) => props.onChange(e.target.value)} 
                     />
                 )
+            default: 
+            return null;
         }
 
     }

@@ -1,31 +1,38 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { passwords } from '../API/server';
 import Dropdown from './Dropdown';
 import Result from './Result';
+
+import { SET_PL  } from "../constants";
+
+
+//import { fetchPasswordList } from '../actions';
 
 
 const CREATION_NEWEST = 'CREATION_NEWEST';
 const CREATION_OLDEST = 'CREATION_OLDEST';
 const INTERACTION_LATEST = 'INTERACTION_LATEST';  
 
-const List = ({justUpdated, setJustUpdated}) => {
-    const modifiedPassword = useSelector(state => state.modifiedPassword);
-    console.log(modifiedPassword);
-    
-    const [passwordList, setPasswordList] = useState(null);
+const List = () => {
+    const passwordList = useSelector(state => state.passwordList && Object.values(state.passwordList));
+
+    const modifiedPassword = useSelector(state => state.modifiedPassword)
+    const dispatch = useDispatch();
+    console.log(modifiedPassword, passwordList);
+
     const [currentSort, setCurrentSort] = useState('');
+    const [sortedPL, setSortedPL] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
+
     useEffect(() => {
-        const getPasswordList = async () => {
+         const getPasswordList = async () => {
             const { data } = await passwords.get('/passwords');
-            //orderByDate(currentSort, data);
-            setPasswordList(data);
+            dispatch({ type: SET_PL, payload: data });
         }
-        console.log('this should be fired when it is first rendered, and justUpdated has changed')
         getPasswordList();
-    }, [justUpdated]);
+    }, [modifiedPassword, dispatch]);
         // const getPasswordList = async () => {
         //     const {data} = await passwords.get('/passwords');
         //     data.map(item => {
@@ -40,8 +47,8 @@ const List = ({justUpdated, setJustUpdated}) => {
         
     const orderByDate = (eleCLicked, pwsToSort) => {
         const id = eleCLicked.id ? eleCLicked.id : eleCLicked.parentElement.id;
-        let sortedPassword = [...pwsToSort];
-        sortedPassword.sort( (item1, item2) => {
+        let pLToSort = [...pwsToSort];
+        pLToSort.sort( (item1, item2) => {
             switch(id) {
                 case CREATION_NEWEST:
                     console.log(id)
@@ -52,16 +59,17 @@ const List = ({justUpdated, setJustUpdated}) => {
                 case INTERACTION_LATEST:
                     console.log(id)
                     return new Date(item2.lastInteracted) - new Date(item1.lastInteracted);
-
+                default:
+                    return item1.date - item2.date;
                 }
             });  
-        setPasswordList(sortedPassword);
+        setSortedPL(pLToSort);
         setCurrentSort(id);
         setIsOpen(false);
     }
         
-    const renderedPasswordList =  passwordList
-    ? passwordList.map((item, index) => {
+    const renderedPasswordList = passwordList 
+    ? passwordList.map( (item, index) => {
         return(
             <Result 
                 key={index}
@@ -72,7 +80,6 @@ const List = ({justUpdated, setJustUpdated}) => {
                 iClass2='edit'
                 isNew={item.isNew}
                 id={item.id}
-                setJustUpdated={setJustUpdated}
                 dropdown={
                 <Dropdown 
                     listProps={{
@@ -83,22 +90,62 @@ const List = ({justUpdated, setJustUpdated}) => {
                 />}
                 >
             </Result>
-
         )
-        
     })
-    : (
-        <div>
-            No passwords avilable!
-        </div>
-    )
-    ;
-
-    // const renderAdditionalInfo = () => {
-    //     return(
-
-    //     )
-    // }
+        : (<div> No passwords avilable! </div>);
+    // if(sortedPL) {
+    //     sortedPL.map((item, index) => {
+    //         return(
+    //             <Result 
+    //                 key={index}
+    //                 content={item.title}
+    //                 onBtnClick1={`passwordList/delete/${item.id}`}
+    //                 onBtnClick2={`passwordList/edit/${item.id}`}
+    //                 iClass1='x'
+    //                 iClass2='edit'
+    //                 isNew={item.isNew}
+    //                 id={item.id}
+    //                 dropdown={
+    //                 <Dropdown 
+    //                     listProps={{
+    //                         password: item.password,
+    //                         dateCreated: item.date.slice(0, 10),
+    //                         author:item.author}
+    //                     } 
+    //                 />}
+    //                 >
+    //             </Result>
+    
+    //         )
+    //                 }
+        
+    // else if(passwordList) {
+    //     passwordList.map((item, index) => {
+    //         return(
+    //             <Result 
+    //                 key={index}
+    //                 content={item.title}
+    //                 onBtnClick1={`passwordList/delete/${item.id}`}
+    //                 onBtnClick2={`passwordList/edit/${item.id}`}
+    //                 iClass1='x'
+    //                 iClass2='edit'
+    //                 isNew={item.isNew}
+    //                 id={item.id}
+    //                 dropdown={
+    //                 <Dropdown 
+    //                     listProps={{
+    //                         password: item.password,
+    //                         dateCreated: item.date.slice(0, 10),
+    //                         author:item.author}
+    //                     } 
+    //                 />}
+    //                 >
+    //             </Result>
+    
+    //         )
+    // } return <div> No passwords avilable! </div>;
+    
+    
 
     return (
         <div className="container list">
@@ -140,29 +187,3 @@ const List = ({justUpdated, setJustUpdated}) => {
 }
 
 export default List;
-
-// <div className="setting" key={passwordItem.id} >
-//                 <span> 
-//                     {passwordItem.id} : {passwordItem.password} 
-//                 </span>
-
-//                 <span >
-//                     <Link className="small button" to={`passwordList/delete/${passwordItem.id}`}>
-//                         <i className="x icon"></i>
-//                     </Link>
-
-//                     <Link className="small button" to={`passwordList/edit/${passwordItem.id}`}>
-//                         <i className="edit icon"></i>
-//                     </Link>
-//                 </span>
-
-//             </div>
-
-//     const renderPasswords = () => { passwordList.map(passwordItem => {
-    //         return(
-    //             <div>
-    //                 {passwordItem.password}
-    //             </div>
-    //         )
-    //     }) 
-    // }

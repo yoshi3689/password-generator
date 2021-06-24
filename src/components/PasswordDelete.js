@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import  { Link, useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
 import { passwords } from '../API/server';
 import Dropdown from './Dropdown';
 import Modal from './Modal';
+import { SET_MODIFIED_PASSWORD, DELETE_PW } from '../constants';
 
-const PasswordDelete = ({ match, setJustUpdated }) => {
+const PasswordDelete = ({ match }) => {
+
+    const dispatch = useDispatch();
     const [passwordToDelete, setPasswordToDelete] = useState(null);
-    // const [showModal, setShowModal] = useState(null);
+
     useEffect(() => {
+        const id = match.params.id;
         const getPassword = async () => {
-            const { data } = await passwords.get(`/passwords/${match.params.id}`);
+            const { data } = await passwords.get(`/passwords/${id}`);
             console.log(data);
-            setPasswordToDelete(data)
-            // console.log(new Date().getDate())
+            setPasswordToDelete({...data, type: DELETE_PW});
         }
         getPassword();
-    }, []);
+    }, [match.params.id]);
 
     const history = useHistory();
 
@@ -27,7 +32,8 @@ const PasswordDelete = ({ match, setJustUpdated }) => {
     const deletePassword = async() => {
         const { id } = passwordToDelete;
         await passwords.delete(`/passwords/${id}`);
-        setJustUpdated(id);
+        dispatch({ type: DELETE_PW, payload: id});
+        dispatch({ type: SET_MODIFIED_PASSWORD, payload: passwordToDelete});
         alert("successfully deleted");
         history.push('/passwordList');
     }
